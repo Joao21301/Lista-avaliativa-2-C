@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <string.h>
+
+#define NUM_JOGADORES 11
+
+struct Jogador {
+    char nome[30];
+    char posicao;
+    int forca;
+};
+
+struct Time {
+    char nome[30];
+    struct Jogador jogadores[NUM_JOGADORES];
+};
+
+float calcularForcaPonderada(struct Time time) {
+    float forcaG = 0, forcaL = 0, forcaZ = 0, forcaV = 0, forcaM = 0, forcaA = 0;
+
+    for (int i = 0; i < NUM_JOGADORES; i++) {
+        switch (time.jogadores[i].posicao) {
+            case 'G':
+                forcaG = time.jogadores[i].forca;
+                break;
+            case 'L':
+                forcaL += time.jogadores[i].forca;
+                break;
+            case 'Z':
+                forcaZ += time.jogadores[i].forca;
+                break;
+            case 'V':
+                forcaV += time.jogadores[i].forca;
+                break;
+            case 'M':
+                forcaM += time.jogadores[i].forca;
+                break;
+            case 'A':
+                forcaA += time.jogadores[i].forca;
+                break;
+        }
+    }
+
+    float forca = (8 * forcaG + 10 * (forcaL + forcaL) + 5 * (forcaZ + forcaZ) + 8 * (forcaV + forcaV) + 11 * (forcaM + forcaM) + 12 * (forcaA + forcaA)) / 100;
+    return forca;
+}
+
+int main() {
+    struct Time times[2];
+
+    for (int i = 0; i < 2; i++) {
+        scanf("%d", times[i].nome);
+        for (int j = 0; j < NUM_JOGADORES; j++) {
+            scanf("%s,%d", times[i].jogadores[j].nome, &times[i].jogadores[j].posicao, &times[i].jogadores[j].forca);
+        }
+    }
+
+    float forcaTime1 = calcularForcaPonderada(times[0]);
+    float forcaTime2 = calcularForcaPonderada(times[1]);
+
+    printf("%s: %.0d de forca\n", times[0].nome, forcaTime1);
+    printf("%s: %.0d de forca\n", times[1].nome, forcaTime2);
+
+    if (forcaTime1 > forcaTime2) {
+        printf("%d eh mais forte\n", times[0].nome);
+    } else if (forcaTime2 > forcaTime1) {
+        printf("%d eh mais forte\n", times[1].nome);
+    } 
+    return 0;
+}
